@@ -39,6 +39,5 @@ export namespace GQL {
     password: string;
   }
 }
-
 export default GQL;
 // tslint:enable
