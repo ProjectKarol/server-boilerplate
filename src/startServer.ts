@@ -3,15 +3,15 @@ import { GraphQLServer } from "graphql-yoga";
 import * as path from "path";
 import * as fs from "fs";
 import { mergeSchemas, makeExecutableSchema } from "graphql-tools";
-import { createTypeormConn } from "./utils/createTypeormConn";
 import { GraphQLSchema } from "graphql";
+
+import { createTypeormConn } from "./utils/createTypeormConn";
 
 export const startServer = async () => {
   const schemas: GraphQLSchema[] = [];
   const folders = fs.readdirSync(path.join(__dirname, "./modules"));
   folders.forEach(folder => {
     const { resolvers } = require(`./modules/${folder}/resolvers`);
-
     const typeDefs = importSchema(
       path.join(__dirname, `./modules/${folder}/schema.graphql`)
     );

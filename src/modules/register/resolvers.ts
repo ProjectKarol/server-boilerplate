@@ -5,13 +5,21 @@ import GQL from "../../types/schema";
 
 export const resolvers: ResolverMap = {
   Query: {
-    bye: async () => "bye"
+    bye: () => "bye"
   },
   Mutation: {
     register: async (
       _,
       { email, password }: GQL.IRegisterOnMutationArguments
     ) => {
+      const userAlreadyExist = await User.findOne({
+        where: { email },
+        select: ["id"]
+      });
+
+      if (userAlreadyExist) {
+        return [{ path: "email", message: "alerady taken " }];
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = User.create({
         email,
@@ -19,7 +27,7 @@ export const resolvers: ResolverMap = {
       });
 
       await user.save();
-      return true;
+      return null;
     }
   }
 };
